@@ -6,19 +6,35 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          command: buildozer android debug
-          buildozer_version: stable
+          python-version: '3.10'
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev \
+            zlib1g-dev libssl-dev openssl libffi-dev libgdbm-dev libndbm-dev libncursesw5-dev \
+            libreadline-dev libcommon-sense-perl libapp-fatpacker-perl openjdk-17-jdk \
+            git zip unzip autoconf libtool pkg-config lld
+
+      - name: Install Buildozer & Cython
+        run: |
+          pip install --upgrade pip
+          pip install --upgrade buildozer cython==0.29.33
+
+      - name: Build APK with Buildozer
+        run: |
+          buildozer android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ConfluenceEngine-APK
-          path: ${{ steps.buildozer.outputs.filename }}
+          path: bin/*.apk
