@@ -30,11 +30,17 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade buildozer cython==0.29.33
 
-      - name: Pre-accept Buildozer SDK Licenses
+      - name: Pre-install Android SDK Tools
         run: |
+          mkdir -p ~/.buildozer/android/platform/android-sdk
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9441916_latest.zip -O commandlinetools.zip
+          unzip commandlinetools.zip -d ~/.buildozer/android/platform/android-sdk
+          mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+          mv ~/.buildozer/android/platform/android-sdk/cmdline-tools/* ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/ 2>/dev/null || true
+          mkdir -p ~/.buildozer/android/platform/android-sdk/tools/bin
+          ln -s ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
           mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
           echo -e "\n24833b2982d56e430f5e43742808591b0123d3b8\n89330172875f1012513b56219332d250b3d1ce6e\n7a9344ed90ba5736adc992a9a8089d3b2590ca0c" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-          echo -e "\n84831b9402116da56f565b6a4b81aab36825a9da" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
 
       - name: Build APK with Buildozer
         run: |
