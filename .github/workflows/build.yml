@@ -11,11 +11,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build APK with Buildozer Action
-        uses: ArtemS-G/buildozer-action@v1
-        with:
-          command: buildozer android debug
-          buildozer_version: master
+      - name: Build APK using Official Kivy Docker Image
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/home/user/hostpython \
+            kivy/buildozer \
+            buildozer android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
