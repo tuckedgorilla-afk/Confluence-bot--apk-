@@ -11,9 +11,10 @@ fullscreen = 0
 android.permissions = INTERNET, FOREGROUND_SERVICE
 services = confluenceengine:service.py
 
-# --- CRITICAL ANDROID SETTINGS ---
+# --- ANDROID CONFIGURATION ---
 android.api = 33
 android.minapi = 21
 android.sdk_build_tools_version = 33.0.2
 android.ndk = 25b
 android.accept_sdk_license = True
+android.archs = arm64-v8a
