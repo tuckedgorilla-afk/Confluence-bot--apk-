@@ -30,15 +30,12 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade buildozer cython==0.29.33
 
-      - name: Pre-accept All SDK Licenses
+      - name: Build APK with Buildozer
+        env:
+          APP_ANDROID_ACCEPT_SDK_LICENSES: 'True'
+          BUILDOZER_ALLOW_KIVY_NEON: '0'
         run: |
-          mkdir -p ~/.android
-          touch ~/.android/repositories.cfg
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-
-      - name: Build APK with Buildozer (Non-Interactive)
-        run: |
-          APP_ANDROID_ACCEPT_SDK_LICENSES=1 YES=1 buildozer -v android debug
+          yes | buildozer -v android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
